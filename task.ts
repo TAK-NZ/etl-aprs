@@ -44,6 +44,7 @@ const Env = Type.Object({
 
 const APRSFrame = Type.Object({
     from: Type.String(),
+    destination: Type.Optional(Type.String()),
     latitude: Type.Number(),
     longitude: Type.Number(),
     comment: Type.Optional(Type.String()),
@@ -91,6 +92,10 @@ export default class Task extends ETL {
             const callsignMatch = header.match(/^([A-Z0-9-]+)/);
             if (!callsignMatch) return null;
             const from = callsignMatch[1];
+            
+            // Extract destination (after '>' and before ',')
+            const destMatch = header.match(/>([A-Z0-9-]+)/);
+            const destination = destMatch ? destMatch[1] : '';
 
             // Look for position data in payload
             // Format: !DDMM.mmN/DDDMM.mmW or =DDMM.mmN/DDDMM.mmW
@@ -117,7 +122,8 @@ export default class Task extends ETL {
                 latitude,
                 longitude,
                 comment: comment || undefined,
-                raw: data
+                raw: data,
+                destination
             };
         } catch (error) {
             console.warn(`Failed to parse APRS frame: ${data}`, error);
@@ -196,7 +202,7 @@ export default class Task extends ETL {
                 const frame = this.parseAPRSFrame(frameData);
                 if (!frame) continue;
                 
-                if (env.IGNORE_SOURCES.includes(frame.from)) continue;
+                if (env.IGNORE_SOURCES.includes(frame.from) || env.IGNORE_SOURCES.includes(frame.destination || '')) continue;
                 
                 this.stationCache.set(frame.from, { ...frame, lastSeen: new Date() });
             }
