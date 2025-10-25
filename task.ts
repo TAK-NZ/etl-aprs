@@ -1,5 +1,5 @@
 import { Static, Type, TSchema } from '@sinclair/typebox';
-import ETL, { Event, SchemaType, handler as internal, local, InvocationType, DataFlowType, InputFeatureCollection } from '@tak-ps/etl';
+import ETL, { Event, SchemaType, handler as internal, local, InvocationType, DataFlowType } from '@tak-ps/etl';
 import * as net from 'net';
 
 const Env = Type.Object({
@@ -216,7 +216,15 @@ export default class Task extends ETL {
             }
             
             // Create features from all cached stations
-            const features: Static<typeof InputFeatureCollection>['features'] = [];
+            const features: Array<{
+                id: string;
+                type: 'Feature';
+                properties: Record<string, unknown>;
+                geometry: {
+                    type: 'Point';
+                    coordinates: [number, number, number];
+                };
+            }> = [];
             for (const [, station] of this.stationCache.entries()) {
                 const callsign = station.from.replace(' ', '');
                 const uid = `APRS.${callsign}`;
@@ -253,8 +261,8 @@ export default class Task extends ETL {
                 });
             }
             
-            const fc: Static<typeof InputFeatureCollection> = {
-                type: 'FeatureCollection',
+            const fc = {
+                type: 'FeatureCollection' as const,
                 features
             };
             
