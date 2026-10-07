@@ -1,0 +1,27 @@
+{
+    "version": "1.0",
+    "name": "APRS-IS",
+    "description": "Connects to an APRS-IS server, collects amateur radio station position reports matching a configurable filter, and posts the stations to the map as CoT features.",
+    "compute": {
+        "memory": 1024,
+        "timeout": 360
+    },
+    "permissions": [
+        {
+            "resource": "feature:submit",
+            "required": true,
+            "description": "Submits APRS station position features to CloudTAK"
+        }
+    ],
+    "invocations": {
+        "incoming": {
+            "schedule": {
+                "description": "Connects to APRS-IS for about five minutes per run, collecting station position reports, then submits the stations seen.",
+                "default": {
+                    "enabled": true,
+                    "schedule": "rate(6 minutes)"
+                }
+            }
+        }
+    }
+}

@@ -42,6 +42,7 @@ Common APRS-IS filter examples:
 npm install
 npm run build
 npm run lint
+npm test
 ```
 
 ## License
