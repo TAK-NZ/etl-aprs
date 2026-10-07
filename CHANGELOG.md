@@ -11,3 +11,4 @@ All notable changes to this project will be documented in this file.
 - Configurable filters and parameters
 - Support for position reports and comments
 - TAK-compatible CoT output format
+- Add a .dockerignore so .git, .github, node_modules, dist, test, docs, .agents, .env*, and markdown files are kept out of the image build context
