@@ -5,9 +5,9 @@
     "description": "ETL to bring APRS data into TAK",
     "main": "task.ts",
     "scripts": {
-        "lint": "eslint *.ts",
+        "lint": "eslint *.ts test",
         "build": "tsc --build",
-        "test": "exit 0"
+        "test": "tsx --test test/*.test.ts"
     },
     "author": "Christian Elsen <chris@elsen.nz>",
     "license": "AGPL-3.0-only",
@@ -19,6 +19,7 @@
         "@types/geojson": "^7946.0.16",
         "eslint": "^10.9.0",
         "ts-node": "^10.9.2",
+        "tsx": "^4.23.15",
         "typescript": "^6.0.3",
         "typescript-eslint": "^8.67.0"
     },
